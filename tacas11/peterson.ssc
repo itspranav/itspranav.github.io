@@ -1,0 +1,233 @@
+using System;
+using Microsoft.Contracts;
+
+public class Peterson
+{
+	private uint flag0, flag1, turn, pc1, pc2;
+	
+	public Peterson()
+	ensures flag0 == 0 && flag1 == 0 & turn == 0 && pc1 == 0 && pc2 == 0;
+	{
+		flag0 = 0;
+		flag1 = 0;
+		turn = 0;
+		pc1 = 0;
+		pc2 = 0;
+	}
+	
+	private uint random()
+	ensures (result == 0 || result == 1) && flag0 == old(flag0) && flag1 == old(flag1) && turn == old(turn) && pc1 == old(pc1) && pc2 == old(pc2);
+	{
+		return 0;
+	}
+	
+	private void processP2()
+	ensures flag0 == old(flag0) && pc1 == old(pc1);
+	ensures old(turn) == 0 ==> turn == 0;
+	ensures old(pc2) == 1 ==> pc2 == 1;
+	ensures (old(flag0) == 0 && old(flag1) == 0 && old(turn) == 0 && old(pc2) == 0) ==> ((flag1 == 0 && pc2 == 0) || (flag1 == 1 && pc2 == 0) || (flag1 == 1 && pc2 == 1) || (flag1 == 0 && pc2 == 1));
+	ensures (old(flag0) == 0 && old(flag1) == 0 && old(turn) == 0 && old(pc2) == 1) ==> flag1 == 0; 
+	ensures (old(flag0) == 1 && old(flag1) == 0 && old(turn) == 0 && old(pc2) == 1) ==> flag1 == 0; 
+	ensures (old(flag0) == 0 && old(flag1) == 0 && old(turn) == 1 && old(pc2) == 0) ==> ((flag1 == 0 && turn == 1 && pc2 == 0) || (flag1 == 1 && turn == 1 && pc2 == 0) || (flag1 == 1 && turn == 0 && pc2 == 0) || (flag1 == 1 && turn == 0 && pc2 == 1) || (flag1 == 0 && turn == 0 && pc2 == 1));
+	ensures (old(flag0) == 0 && old(flag1) == 0 && old(turn) == 1 && old(pc2) == 1) ==> (flag1 == 0 && turn == 1);
+	ensures (old(flag0) == 0 && old(flag1) == 1 && old(turn) == 0 && old(pc2) == 0) ==> ((flag1 == 1 && pc2 == 0) || (flag1 == 1 && pc2 == 0) || (flag1 == 1 && pc2 == 1) || (flag1 == 0 && pc2 == 1));
+	ensures (old(flag0) == 0 && old(flag1) == 1 && old(turn) == 0 && old(pc2) == 1) ==> (flag1 == 1 || flag1 == 0);
+	ensures (old(flag0) == 1 && old(flag1) == 1 && old(turn) == 0 && old(pc2) == 1) ==> (flag1 == 1 || flag1 == 0);
+	ensures (old(flag0) == 0 && old(flag1) == 1 && old(turn) == 1 && old(pc2) == 0) ==> ((flag1 == 1 && turn == 1 && pc2 == 0) || (flag1 == 1 && turn == 0 && pc2 == 0) || (flag1 == 1 && turn == 0 && pc2 == 1) || (flag1 == 0 && turn == 0 && pc2 == 1));
+	ensures (old(flag0) == 1 && old(flag1) == 0 && old(turn) == 0 && old(pc2) == 0) ==> ((flag1 == 0 && pc2 == 0) || (flag1 == 1 && pc2 == 0));
+	ensures (old(flag0) == 1 && old(flag1) == 0 && old(turn) == 1 && old(pc2) == 0) ==> ((flag1 == 0 && turn == 1 && pc2 == 0) || (flag1 == 1 && turn == 1 && pc2 == 0) || (flag1 == 1 && turn == 0 && pc2 == 0));
+	ensures (old(flag0) == 1 && old(flag1) == 0 && old(turn) == 1 && old(pc2) == 1) ==> (flag1 == 0 && turn == 1);
+	ensures (old(flag0) == 1 && old(flag1) == 1 && old(turn) == 0 && old(pc2) == 0) ==> (flag1 == 1 && pc2 == 0);
+	ensures (old(flag0) == 1 && old(flag1) == 1 && old(turn) == 1 && old(pc2) == 0) ==> ((flag1 == 1 && turn == 1 && pc2 == 0) || (flag1 == 1 && turn == 0 && pc2 == 0) || (flag1 == 1 && turn == 1 && pc2 == 1) || (flag1 == 0 && turn == 1 && pc2 == 1));
+	ensures (old(flag0) == 1 && old(flag1) == 1 && old(turn) == 1 && old(pc2) == 1) ==> ((flag1 == 1 && turn == 1) || (flag1 == 0 && turn == 1));
+	{
+	
+	uint flag0_g, flag1_g, pc1_g, pc2_g, turn_g, z, nondet;
+
+	flag0_g = flag0;
+	flag1_g = flag1;
+	pc1_g = pc1;
+	pc2_g = pc2;
+	turn_g = turn;
+
+	flag0 = 0;
+	flag1 = 0;
+	pc1 = 0;
+	pc2 = 0;
+	turn = 0;
+	z = 0;
+	
+		nondet = random();
+		if((z != 1) && (nondet == 0))
+			processP1();
+		nondet = random();
+		if(flag0 == flag0_g && flag1 == flag1_g && pc1 == pc1_g && pc2 == pc2_g && turn == turn_g && nondet == 0)
+			z = 1;
+		nondet = random();
+		if(z == 1 && nondet == 0)
+			return;
+			
+	flag1 = 1;
+	
+		nondet = random();
+		if((z != 1) && (nondet == 0))
+			processP1();
+		nondet = random();
+		if(flag0 == flag0_g && flag1 == flag1_g && pc1 == pc1_g && pc2 == pc2_g && turn == turn_g && nondet == 0)
+			z = 1;
+		nondet = random();
+		if(z == 1 && nondet == 0)
+			return;
+			
+	turn = 0;
+	
+		nondet = random();
+		if((z != 1) && (nondet == 0))
+			processP1();
+		nondet = random();
+		if(flag0 == flag0_g && flag1 == flag1_g && pc1 == pc1_g && pc2 == pc2_g && turn == turn_g && nondet == 0)
+			z = 1;
+		nondet = random();
+		if(z == 1 && nondet == 0)
+			return;
+			
+	//while(flag0 == 1 && turn == 0);
+	//pc2 = 1;
+	assume(flag0 != 1 || turn != 0);	
+	pc2 = 1;
+		
+		nondet = random();
+		if((z != 1) && (nondet == 0))
+			processP1();
+		nondet = random();
+		if(flag0 == flag0_g && flag1 == flag1_g && pc1 == pc1_g && pc2 == pc2_g && turn == turn_g && nondet == 0)
+			z = 1;
+		nondet = random();
+		if(z == 1 && nondet == 0)
+			return;
+			
+	flag1 = 0;
+	
+		nondet = random();
+		if((z != 1) && (nondet == 0))
+			processP1();
+		nondet = random();
+		if(flag0 == flag0_g && flag1 == flag1_g && pc1 == pc1_g && pc2 == pc2_g && turn == turn_g && nondet == 0)
+			z = 1;
+		nondet = random();
+		if(z == 1 && nondet == 0)
+			return;
+			
+	assume(false);
+	return;
+	
+	}
+	
+	private void processP1()
+	ensures flag1 == old(flag1) && pc2 == old(pc2);
+	ensures old(turn) == 1 ==> turn == 1;
+	ensures old(pc1) == 1 ==> pc1 == 1;
+	ensures (old(flag0) == 0 && old(flag1) == 0 && old(turn) == 0 && old(pc1) == 0) ==> ((flag0 == 0 && turn == 0 && pc1 == 0) || (flag0 == 1 && turn == 0 && pc1 == 0) || (flag0 == 1 && turn == 1 && pc1 == 0) || (flag0 == 1 && turn == 1 && pc1 == 1) || (flag0 == 0 && turn == 1 && pc1 == 1));
+	ensures (old(flag0) == 0 && old(flag1) == 0 && old(turn) == 0 && old(pc1) == 1) ==> (flag0 == 0 && turn == 0); 
+	ensures (old(flag0) == 0 && old(flag1) == 0 && old(turn) == 1 && old(pc1) == 1) ==> flag0 == 0;
+	ensures (old(flag0) == 0 && old(flag1) == 1 && old(turn) == 0 && old(pc1) == 0) ==> ((flag0 == 0 && turn == 0 && pc1 == 0) || (flag0 == 1 && turn == 0 && pc1 == 0) || (flag0 == 1 && turn == 1 && pc1 == 0));
+	ensures (old(flag0) == 0 && old(flag1) == 1 && old(turn) == 0 && old(pc1) == 1) ==> (flag0 == 0 && turn == 0);
+	ensures (old(flag0) == 0 && old(flag1) == 1 && old(turn) == 1 && old(pc1) == 1) ==> flag0 == 0;
+	ensures (old(flag0) == 1 && old(flag1) == 0 && old(turn) == 0 && old(pc1) == 0) ==> ((flag0 == 1 && turn == 0 && pc1 == 0) || (flag0 == 1 && turn == 1 && pc1 == 0) || (flag0 == 1 && turn == 1 && pc1 == 1) || (flag0 == 0 && turn == 1 && pc1 == 1));
+	ensures (old(flag0) == 1 && old(flag1) == 0 && old(turn) == 1 && old(pc1) == 0) ==> ((flag0 == 1 && pc1 == 0) || (flag0 == 1 && pc1 == 1) || (flag0 == 0 && pc1 == 1));
+	ensures (old(flag0) == 1 && old(flag1) == 0 && old(turn) == 1 && old(pc1) == 1) ==> (flag0 == 1 || flag0 == 0);
+	ensures (old(flag0) == 1 && old(flag1) == 1 && old(turn) == 0 && old(pc1) == 0) ==> ((flag0 == 1 && turn == 0 && pc1 == 0) || (flag0 == 1 && turn == 1 && pc1 == 0) || (flag0 == 1 && turn == 0 && pc1 == 1) || (flag0 == 0 && turn == 0 && pc1 == 1));
+	ensures (old(flag0) == 1 && old(flag1) == 1 && old(turn) == 0 && old(pc1) == 1) ==> ((flag0 == 1 && turn == 0) || (flag0 == 0 && turn == 0));
+	ensures (old(flag0) == 1 && old(flag1) == 1 && old(turn) == 1 && old(pc1) == 0) ==> (flag0 == 1 && pc1 == 0);
+	ensures (old(flag0) == 1 && old(flag1) == 1 && old(turn) == 1 && old(pc1) == 1) ==> (flag0 == 1 || flag0 == 0);
+	{
+	uint flag0_g, flag1_g, pc1_g, pc2_g, turn_g, z, nondet;
+
+	flag0_g = flag0;
+	flag1_g = flag1;
+	pc1_g = pc1;
+	pc2_g = pc2;
+	turn_g = turn;
+
+	flag0 = 0;
+	flag1 = 0;
+	pc1 = 0;
+	pc2 = 0;
+	turn = 0;
+	z = 0;
+	
+		nondet = random();
+		if((z != 1) && (nondet == 0))
+			processP2();
+		nondet = random();
+		if(flag0 == flag0_g && flag1 == flag1_g && pc1 == pc1_g && pc2 == pc2_g && turn == turn_g && nondet == 0)
+			z = 1;
+		nondet = random();
+		if(z == 1 && nondet == 0)
+			return;
+	
+	flag0 = 1;
+	
+		nondet = random();
+		if((z != 1) && (nondet == 0))
+			processP2();
+		nondet = random();
+		if(flag0 == flag0_g && flag1 == flag1_g && pc1 == pc1_g && pc2 == pc2_g && turn == turn_g && nondet == 0)
+			z = 1;
+		nondet = random();
+		if(z == 1 && nondet == 0)
+			return;
+
+	turn = 1;
+
+		nondet = random();
+		if((z != 1) && (nondet == 0))
+			processP2();
+		nondet = random();
+		if(flag0 == flag0_g && flag1 == flag1_g && pc1 == pc1_g && pc2 == pc2_g && turn == turn_g && nondet == 0)
+			z = 1;
+		nondet = random();
+		if(z == 1 && nondet == 0)
+			return;
+	
+	//while(flag1 == 1 && turn == 1);
+	//pc1 = 1;
+	
+	assume(flag1 != 1 || turn != 1);
+	pc1 = 1;
+	
+		nondet = random();
+		if((z != 1) && (nondet == 0))
+			processP2();
+		nondet = random();
+		if(flag0 == flag0_g && flag1 == flag1_g && pc1 == pc1_g && pc2 == pc2_g && turn == turn_g && nondet == 0)
+			z = 1;
+		nondet = random();
+		if(z == 1 && nondet == 0)
+			return;
+	
+	assert(pc2 == 1 ==> flag1 != 1);
+	
+	flag0 = 0;
+	
+		nondet = random();
+		if((z != 1) && (nondet == 0))
+			processP2();
+		nondet = random();
+		if(flag0 == flag0_g && flag1 == flag1_g && pc1 == pc1_g && pc2 == pc2_g && turn == turn_g && nondet == 0)
+			z = 1;
+		nondet = random();
+		if(z == 1 && nondet == 0)
+			return;
+			
+	assume(false);
+	return;
+	
+	}
+	
+	public void main(string![]! args)
+	{
+		processP1();
+	}
+}
+

@@ -1,0 +1,224 @@
+using System;
+using Microsoft.Contracts;
+
+public class Jones
+{
+	private int[]! array;
+	private int index;
+	
+	public Jones()
+	ensures index == array.Length && array.Length == 100;
+	{
+		array = new int[100];
+		index = array.Length;
+	}
+	
+	[Pure] private int random()
+	ensures (result == 0 || result == 1);
+	{
+		return 0;
+	}
+	
+	[Pure] private bool pred(int x)
+	ensures result == (x == 0);
+	{
+		return x == 0;
+	}
+	
+	private void Odd()
+	modifies this.index, this.0;
+	ensures 0 <= index && index <= old(index) && (index < old(index) ==> (index < array.Length ==> pred(array[index])));
+	ensures forall{int i in (0: array.Length); array[i] == old(array[i])};
+	ensures array.Length == old(array.Length);
+	{
+		int[] array_g = new int[array.Length];
+		assume(forall{int i in (0: array.Length); array_g[i] == array[i]});
+		int index_g, z, i;
+		index_g = index;
+		
+		index = array.Length;
+		z = 0;
+		
+			if((z != 1) && (random() == 0))
+				Even();
+			if(index == index_g && random() == 0)
+				z = 1;
+			if(z == 1 && random() == 0)
+				return;
+			
+		i = 0;
+		
+			if((z != 1) && (random() == 0))
+				Even();
+			if(index == index_g && random() == 0)
+				z = 1;
+			if(z == 1 && random() == 0)
+				return;
+		
+		while(i < array.Length && i < index)
+		invariant 0 <= i && i <= array.Length;
+		invariant forall{int j in (0: i), j % 2 == 1; !pred(array[j])};
+		invariant z == 1 ==> (0 <= index && index <= index_g && (index < index_g ==> (index < array.Length ==> pred(array[index]))));
+		invariant (forall{int i in (0: array.Length); array[i] == array_g[i]}) && (array.Length == array_g.Length);
+		{
+				if((z != 1) && (random() == 0))
+					Even();
+				if(index == index_g && random() == 0)
+					z = 1;
+				if(z == 1 && random() == 0)
+					return;
+				
+			if(i % 2 == 1 && pred(array[i]))
+			{
+			
+					if((z != 1) && (random() == 0))
+						Even();
+					if(index == index_g && random() == 0)
+						z = 1;
+					if(z == 1 && random() == 0)
+						return;
+					
+				index = i;
+				
+					if((z != 1) && (random() == 0))
+						Even();
+					if(index == index_g && random() == 0)
+						z = 1;
+					if(z == 1 && random() == 0)
+						return;
+				
+				break;
+			}
+			
+				if((z != 1) && (random() == 0))
+					Even();
+				if(index == index_g && random() == 0)
+					z = 1;
+				if(z == 1 && random() == 0)
+					return;
+				
+			i++;
+			
+				if((z != 1) && (random() == 0))
+					Even();
+				if(index == index_g && random() == 0)
+					z = 1;
+				if(z == 1 && random() == 0)
+					return;
+				
+		}
+		
+			if((z != 1) && (random() == 0))
+				Even();
+			if(index == index_g && random() == 0)
+				z = 1;
+			if(z == 1 && random() == 0)
+				return;
+			
+		assert(forall{int i in (0: array.Length), i % 2 == 1; pred(array[i]) ==> index <= i});
+		
+		assume(false);
+		return;
+	}
+	
+	private void Even()
+	modifies this.index, this.0;
+	ensures 0 <= index && index <= old(index) && (index < old(index) ==> (index < array.Length ==> pred(array[index])));
+	ensures forall{int i in (0: array.Length); array[i] == old(array[i])};
+	ensures array.Length == old(array.Length);
+	{
+		int[] array_g = new int[array.Length];
+		assume(forall{int i in (0: array.Length); array_g[i] == array[i]});
+		int index_g, z, i;
+		index_g = index;
+		
+		index = array.Length;
+		z = 0;
+		
+			if((z != 1) && (random() == 0))
+				Odd();
+			if(index == index_g && random() == 0)
+				z = 1;
+			if(z == 1 && random() == 0)
+				return;
+		
+		i = 0;
+		
+			if((z != 1) && (random() == 0))
+				Odd();
+			if(index == index_g && random() == 0)
+				z = 1;
+			if(z == 1 && random() == 0)
+				return;
+		
+		while(i < array.Length && i < index)
+		invariant 0 <= i && i <= array.Length;
+		invariant forall{int j in (0: i), j % 2 == 0; !pred(array[j])};
+		invariant z == 1 ==> (0 <= index && index <= index_g && (index < index_g ==> (index < array.Length ==> pred(array[index]))));
+		invariant (forall{int i in (0: array.Length); array[i] == array_g[i]} && array.Length == array_g.Length);
+		{
+				if((z != 1) && (random() == 0))
+					Odd();
+				if(index == index_g && random() == 0)
+					z = 1;
+				if(z == 1 && random() == 0)
+					return;
+		
+			if(i % 2 == 0 && pred(array[i]))
+			{
+			
+					if((z != 1) && (random() == 0))
+						Odd();
+					if(index == index_g && random() == 0)
+						z = 1;
+					if(z == 1 && random() == 0)
+						return;
+		
+				index = i;
+				
+					if((z != 1) && (random() == 0))
+						Odd();
+					if(index == index_g && random() == 0)
+						z = 1;
+					if(z == 1 && random() == 0)
+						return;
+						
+				break;
+			}
+			
+				if((z != 1) && (random() == 0))
+					Odd();
+				if(index == index_g && random() == 0)
+					z = 1;
+				if(z == 1 && random() == 0)
+					return;
+					
+			i++;
+			
+			if((z != 1) && (random() == 0))
+					Odd();
+				if(index == index_g && random() == 0)
+					z = 1;
+				if(z == 1 && random() == 0)
+					return;
+		}
+		
+			if((z != 1) && (random() == 0))
+				Odd();
+			if(index == index_g && random() == 0)
+				z = 1;
+			if(z == 1 && random() == 0)
+				return;
+				
+		assert(forall{int i in (0: array.Length), i % 2 == 0; pred(array[i]) ==> index <= i});
+		
+		assume(false);
+		return;
+	}
+	
+	public void main(string![]! args)
+	{
+		Even();
+	}
+	
+}

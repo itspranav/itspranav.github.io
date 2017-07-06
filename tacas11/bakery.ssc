@@ -1,0 +1,148 @@
+using System;
+using Microsoft.Contracts;
+
+public class Bakery
+{
+	private int ticket0, ticket1;
+	int pc0, pc1;
+
+	invariant (pc0 == 1) ==> ((ticket0 != 0) && ((ticket1 == 0) || (ticket1 > ticket0) || (ticket1 == ticket0 && 1 >= 0)));
+	invariant (pc1 == 1) ==> ((ticket1 != 0) && ((ticket0 == 0) || (ticket0 > ticket1) || (ticket0 == ticket1 && 0 >= 1)));
+	invariant ticket0 >= 0 && ticket1 >= 0;
+	invariant(!(pc1 == 1 && pc0 == 1));
+	
+	public Bakery()
+	ensures ticket0 == 0 && ticket1 == 0 && pc0 == 0 && pc1 == 0;
+	{
+		pc0 = 0; pc1 = 0;
+		ticket0 = 0; ticket1 = 0;
+	}
+	
+	[Pure] private uint random()
+	ensures (result == 0 || result == 1);
+	{
+		return 0;
+	}
+	
+	private void processP2()
+	ensures ticket1 == old(ticket1);
+	ensures old(ticket0) != 0 ==> ticket0 == old(ticket0);
+	ensures old(ticket0) == 0 ==> ((ticket0 == 0) || (ticket0 == 1 + old(ticket1)));
+	ensures pc1 == old(pc1) && ((pc0 == old(pc0)) || (pc0 == 1 && old(pc0) == 0));
+	{
+		int pc0_g, pc1_g;
+		int ticket0_g, ticket1_g;
+		int z;
+		
+		ticket0_g = ticket0; ticket1_g = ticket1;
+		pc0_g = pc0; pc1_g = pc1;
+		
+		pc0 = 0; pc1 = 0;
+		ticket0 = 0; ticket1 = 0;
+		z = 0;
+		
+		
+			if((z != 1) && (random() == 0))
+				processP1();
+			if(ticket0 == ticket0_g && ticket1 == ticket1_g && pc0 == pc0_g && pc1 == pc1_g && random() == 0)
+				z = 1;
+			if(z == 1 && random() == 0)
+				return;
+	
+		ticket0 = 1 + ticket1;
+	
+			if((z != 1) && (random() == 0))
+				processP1();
+			if(ticket0 == ticket0_g && ticket1 == ticket1_g && pc0 == pc0_g && pc1 == pc1_g && random() == 0)
+				z = 1;
+			if(z == 1 && random() == 0)
+				return;
+	
+		assume((ticket1 == 0) || (ticket1 > ticket0) || (ticket1 == ticket0 && 1 >= 0));
+			
+			if((z != 1) && (random() == 0))
+				processP1();
+			if(ticket0 == ticket0_g && ticket1 == ticket1_g && pc0 == pc0_g && pc1 == pc1_g && random() == 0)
+				z = 1;
+			if(z == 1 && random() == 0)
+				return;
+		
+		// Critical Section
+		pc0 = 1;
+		
+			if((z != 1) && (random() == 0))
+				processP1();
+			if(ticket0 == ticket0_g && ticket1 == ticket1_g && pc0 == pc0_g && pc1 == pc1_g && random() == 0)
+				z = 1;
+			if(z == 1 && random() == 0)
+				return;
+				
+		assume(false);
+		return;
+	
+	}
+	
+	private void processP1()
+	ensures ticket0 == old(ticket0);
+	ensures old(ticket1) != 0 ==> ticket1 == old(ticket1);
+	ensures old(ticket1) == 0 ==> ((ticket1 == 0) || (ticket1 == 1 + old(ticket0)));
+	ensures pc0 == old(pc0) && ((pc1 == old(pc1)) || (pc1 == 1 && old(pc1) == 0));
+	{
+		int pc0_g, pc1_g;
+		int ticket0_g, ticket1_g;
+		int z;
+		
+		ticket0_g = ticket0; ticket1_g = ticket1;
+		pc0_g = pc0; pc1_g = pc1;
+		
+		pc0 = 0; pc1 = 0;
+		ticket0 = 0; ticket1 = 0;
+		z = 0;
+		
+		
+			if((z != 1) && (random() == 0))
+				processP2();
+			if(ticket0 == ticket0_g && ticket1 == ticket1_g && pc0 == pc0_g && pc1 == pc1_g && random() == 0)
+				z = 1;
+			if(z == 1 && random() == 0)
+				return;
+	
+		ticket1 = 1 + ticket0;
+	
+			if((z != 1) && (random() == 0))
+				processP2();
+			if(ticket0 == ticket0_g && ticket1 == ticket1_g && pc0 == pc0_g && pc1 == pc1_g && random() == 0)
+				z = 1;
+			if(z == 1 && random() == 0)
+				return;
+	
+		assume((ticket0 == 0) || (ticket0 > ticket1) || (ticket0 == ticket1 && 0 >= 1));
+			
+			if((z != 1) && (random() == 0))
+				processP2();
+			if(ticket0 == ticket0_g && ticket1 == ticket1_g && pc0 == pc0_g && pc1 == pc1_g && random() == 0)
+				z = 1;
+			if(z == 1 && random() == 0)
+				return;
+		
+		// Critical Section
+		pc1 = 1;
+		
+			if((z != 1) && (random() == 0))
+				processP2();
+			if(ticket0 == ticket0_g && ticket1 == ticket1_g && pc0 == pc0_g && pc1 == pc1_g && random() == 0)
+				z = 1;
+			if(z == 1 && random() == 0)
+				return;
+					
+		assume(false);
+		return;
+	
+	}
+	
+	public void main(string![]! args)
+	{
+		//processP1();
+	}
+}
+

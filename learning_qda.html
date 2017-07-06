@@ -1,0 +1,110 @@
+<HTML>
+<title>Pranav Garg
+</title>
+<head>
+<meta NAME="keywords" CONTENT="pranav garg, learning, data automaton, array property fragment, strand">
+</head>
+
+<body marginwidth=100 marginheight=0 leftmargin=100 topmargin=0>
+<?php include_once("analyticstracking.php") ?>
+
+<table width=800 align=left>
+<br>
+<tr><td>
+	<h2>Learning Universally Quantified Invariants of Linear Data Structures</h2>
+	<hr><br>
+</td></tr>
+
+<tr><td>
+<p>
+This research project presents a novel learning based approach to the 
+synthsis of loop invariants for programs manipulating linear heap data 
+structures such as lists and arrays. Please see the following paper for technical 
+details.
+</p>
+
+<p>
+<b><a href=papers/cav13.pdf>Learning Universally Quantified Invariants of Linear Data Structures</a></b>.<br> 
+			Pranav Garg, Christof Loding, P. Madhusudan and Daniel Neider<br>
+			25th Int'l Conf. on Computer Aided Verification (CAV), 2013.<br>
+</p>
+
+<p> The full version of the above CAV paper can be accessed from arXiv at:<br><br>
+<b><a href=http://arxiv.org/abs/1302.2273>Learning Universally Quantified Invariants of Linear Data Structures</a></b>.<br> 
+			Pranav Garg, Christof Loding, P. Madhusudan and Daniel Neider<br>
+			CoRR, abs/1302.2273, 2013.<br>
+</p>
+
+<h3>Source Code</h3>
+<p>
+We implemented a prototype of our technique in C++. The source code of 
+this implementation can be found below. Please note that we are 
+currently cleaning and improving the code. A much improved version will 
+be online very soon.
+</p>
+
+<p>
+Note that our implementation requires the <a href="http://libalf.informatik.rwth-aachen.de/">libALF library</a> to run, which is included in the source archive.
+</p>
+
+<ul>
+	<li>Download: <a href="code/learning_qda/learning_qda.zip">learning_qda.zip</a> (502KB)</li>
+</ul>
+
+<h3>Example</h3>
+<p>
+Below, we show the results of our prototype on the <em>sorted-list-find </em> program. This program searches for a given <em>key</em> in a sorted list.
+The code for the program looks as follows.
+</p>
+
+<div>
+<pre>bool sorted_list_find(item* head, int key) {
+	item* cur;
+	cur = head;
+
+	while (cur != NULL &amp;&amp; cur-&gt;data &lt; key) {
+		cur = cur-&gt;next;
+	}
+
+	if(cur == NULL || cur-&gt;data &gt; key)
+                return false;
+      else return true;
+}
+</pre>
+</div>
+
+<p>
+An potential invariant is the following. Note that the invariant uses two universally quantified variables <em>y<sub>1</sub></em> and <em>y<sub>2</sub></em>.
+</p><p>
+</p><div><img src="code/learning_qda/invariant.png" alt="Invariant" width="60%"></div>
+
+<p>
+The output of our implementation is the following EQDA.
+</p>
+
+<div><img src="code/learning_qda/eqda.png" alt="EQDA" width="80%"></div>
+
+<p>
+It ranges over the pointer variables <em>head</em>, <em>cur</em>, and <em>key</em> as well as the universally quantified variables <em>y<sub>1</sub></em> and <em>y<sub>2</sub></em>.
+Missing transitions point to a sink state labeled with the data formula <em>false</em>, which is not shown. The initial state is <em>q<sub>0</sub></em>.
+States for which no data formula is displayed are implicitely labeled with the data formula <em>false</em>.
+</p>
+
+<p>
+The learning algorithm already learns an elastic QDA and, hence, 
+elastification was not applied. Note that the learned EQDA represents a 
+loop invariant.
+</p>
+</td></tr>
+
+<tr><td>		
+		<p style="text-align: right;"><a href="index.html">Back to Homepage</a></p>
+		<hr>
+</td></tr>
+
+
+<tr><td>
+    <p><i><i><i><i>Last Updated: Apr 25 2013.</i></i></i></i></p>
+</tr></td>		
+</table>
+</body></HTML>

@@ -1,0 +1,114 @@
+using System;
+using Microsoft.Contracts;
+
+   public class Owicki
+    {
+		private uint x, pc1, pc2;
+		
+        public Owicki()
+        {
+        }
+        
+        private uint random()
+		ensures (result == 0 || result == 1) && x == old(x) && pc1 == old(pc1) && pc2 == old(pc2);
+		{
+			return 0;
+		}
+		
+        private void processP2()
+        ensures (old(pc2) == 0 && pc2 == 1 && x == old(x) + 1) || (pc2 == old(pc2) && x == old(x));
+        ensures pc1 == old(pc1);
+        {
+			uint x_g, pc1_g, pc2_g, z, nondet;
+			
+			x_g = x;
+			pc1_g = pc1;
+			pc2_g = pc2;
+			
+			x = 0;
+			pc1 = 0;
+			pc2 = 0;
+			z = 0;
+			
+			nondet = random();
+			if((z != 1) && (nondet == 0))
+				processP1();
+			nondet = random();
+			if(x == x_g && pc1 == pc1_g && pc2 == pc2_g && nondet == 0)
+				z = 1;
+			nondet = random();
+			if(z == 1 && nondet == 0)
+				return;
+				
+		x = x+ 1;
+		pc2 = pc2 + 1;
+		
+			nondet = random();
+			if((z != 1) && (nondet == 0))
+				processP1();
+			nondet = random();
+			if(x == x_g && pc1 == pc1_g && pc2 == pc2_g && nondet == 0)
+				z = 1;
+			nondet = random();
+			if(z == 1 && nondet == 0)
+				return;
+				
+		assume(false);
+		return;
+				
+        }
+        
+        private void processP1()
+        ensures (old(pc1) == 0 && pc1 == 1 && x == old(x) + 1) || (pc1 == old(pc1) && x == old(x));
+        ensures pc2 == old(pc2);
+        {
+			uint x_g, pc1_g, pc2_g, z, nondet;
+			
+			x_g = x;
+			pc1_g = pc1;
+			pc2_g = pc2;
+			
+			x = 0;
+			pc1 = 0;
+			pc2 = 0;
+			z = 0;
+			
+			nondet = random();
+			if((z != 1) && (nondet == 0))
+				processP2();
+			nondet = random();
+			if(x == x_g && pc1 == pc1_g && pc2 == pc2_g && nondet == 0)
+				z = 1;
+			nondet = random();
+			if(z == 1 && nondet == 0)
+				return;
+				
+		x = x+ 1;
+		pc1 = pc1 + 1;
+		
+			nondet = random();
+			if((z != 1) && (nondet == 0))
+				processP2();
+			nondet = random();
+			if(x == x_g && pc1 == pc1_g && pc2 == pc2_g && nondet == 0)
+				z = 1;
+			nondet = random();
+			if(z == 1 && nondet == 0)
+				return;
+				
+		assert(pc2 == 1 ==> x == 2);
+		
+		assume(false);
+		return;
+				
+        }
+        
+        public void main(string![]! args)
+        {
+			x = 0;
+			pc1 = 0;
+			pc2 = 0;
+			processP1();
+        }
+    }
+

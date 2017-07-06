@@ -1,0 +1,89 @@
+<HTML>
+<title>Pranav Garg
+</title>
+<head>
+<meta NAME="keywords" CONTENT="pranav garg, learning, data automaton, array property fragment, strand">
+</head>
+
+<body marginwidth=100 marginheight=0 leftmargin=100 topmargin=0>
+<?php include_once("analyticstracking.php") ?>
+
+<table width=800 align=left>
+<br>
+<tr><td>
+	<h2>Quantified Data Automata for Skinny-Trees: an Abstract Domain for Lists</h2>
+	<hr><br>
+</td></tr>
+
+<tr><td>
+<p>
+Quantified Data Automata is an automaton model for expressing 
+universally quantified properties over arrays and lists, for eg. sortedness 
+of arrays. 
+</p>
+
+
+<p>
+This automata model has several desirable properties. First, the 
+quantified data automaton form a highly expressive
+and a very powerful abstract domain which we show can prove non-trivial 
+complex properties over arrays and lists.
+Secondly, quantified data automata are learnable efficiently. We show 
+that using the quantified data automata we can passively-learn 
+universally
+quantified invariants over arrays and lists very efficiently, from a set
+ of examples and counter-examples.
+These two techniques using quantified data automata present two 
+orthrogonal ways of inferring universally quantified invariants over 
+linear heap structures.
+</p>
+<p>
+Additionally, we discover a sub-class of quantified data automata called
+ elastic QDAs which capture formulas in decidable logics --- decidable 
+fragment
+of Strand over lists and the decidable array property fragment over 
+arrays.
+Hence, the quantified data automata not only present ways to learn the 
+universally quantified invariants, but also ensure that the
+invariants thus learned can be used for verification using 
+satisfiability modulo decidable theories (SMT).
+</p>
+
+<p>
+Please see the following papers for the technical details.
+<ul>
+			<li><b>Quantified Data Automata on Skinny Trees: an Abstract Domain for Lists</b>. 
+			<a href=papers/sas13.pdf>PDF</a></li>
+			Pranav Garg, P. Madhusudan and Gennaro Parlato<br>
+			20th Static Analysis Symposium (SAS), 2013. <br>
+
+			<br>
+			<li><b>Learning Universally Quantified Invariants of Linear Data Structures</b>. 
+			<a href=papers/cav13.pdf>PDF</a>, <a href=http://arxiv.org/abs/1302.2273>arXiv</a></li>
+			Pranav Garg, Christof Loding, P. Madhusudan and Daniel Neider<br>
+			25th Int'l Conf. on Computer Aided Verification (CAV), 2013.<br>
+</ul>
+</p>
+
+
+<br>
+<h3>Experimental Results</h3> 
+Results evaluating the abstract domain over quantified data automata can be accessed <a href="code/qsdas/qsdas.zip">here</a>. The VirtualBox VM desktop with
+all the experimental results can be found <a href="http://goo.gl/9j2gU">here</a>.
+Results on using QDAs to learn invariants from examples and counter-examples can be accessed <a href="learning_qda.html">here</a>. 
+<br>
+<br>
+</td></tr>
+
+<tr><td>		
+		<p style="text-align: right;"><a href="index.html">Back to Homepage</a></p>
+		<hr>
+</td></tr>
+
+<tr><td>
+    <i><i><i><i>Last Updated: Apr 25 2013.</i></i></i></i>
+</tr></td>		
+</table>
+
+
+</body></html>

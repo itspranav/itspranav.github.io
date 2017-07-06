@@ -1,0 +1,184 @@
+using System;
+using Microsoft.Contracts;
+
+class Quadeer
+{
+	private uint x, l;
+	
+	Quadeer()
+	ensures x == 1 && l == 0;
+	{
+		x = 1;
+		l = 0;
+	}
+	
+	private uint random()
+	ensures (result == 0 || result == 1) && l == old(l) && x == old(x);
+	{
+		return 0;
+	}
+	
+	private void processP2()
+	ensures (old(l) == 0 && old(x) == 1) ==> ((l == 2 && x == 1) || (l == 0 && x == 1) || (l == 2 && x == 0));
+	ensures (old(l) == 2 && old(x) == 1) ==> ((l == 0 && x == 1) || (l == 2 && x == 1) || (l == 2 && x == 0));
+	ensures (old(l) == 2 && old(x) == 0) ==> ((l == 2 && x == 1) || (l == 2 && x == 0) || (l == 0 && x == 1));
+	ensures (old(l) == 1) ==> (l == old(l) && x == old(x));
+	{
+		uint x_g, l_g, z, nondet;
+
+		x_g = x;
+		l_g = l;
+		
+		x = 1;
+		l = 0;
+		z = 0;
+		
+		nondet = random();
+		if((z != 1) && (nondet == 0))
+			processP1();
+		nondet = random();
+		if(x == x_g && l == l_g && nondet == 0)
+			z = 1;
+		nondet = random();
+		if(z == 1 && nondet == 0)
+			return;
+	
+	assume(l == 0);
+	l = 2;
+	
+		nondet = random();
+		if((z != 1) && (nondet == 0))
+			processP1();
+		nondet = random();
+		if(x == x_g && l == l_g && nondet == 0)
+			z = 1;
+		nondet = random();
+		if(z == 1 && nondet == 0)
+			return;
+	
+	x = 0;
+	
+		nondet = random();
+		if((z != 1) && (nondet == 0))
+			processP1();
+		nondet = random();
+		if(x == x_g && l == l_g && nondet == 0)
+			z = 1;
+		nondet = random();
+		if(z == 1 && nondet == 0)
+			return;
+	
+	x = x + 1;
+	
+		nondet = random();
+		if((z != 1) && (nondet == 0))
+			processP1();
+		nondet = random();
+		if(x == x_g && l == l_g && nondet == 0)
+			z = 1;
+		nondet = random();
+		if(z == 1 && nondet == 0)
+			return;
+	
+	l = 0;
+	
+		nondet = random();
+		if((z != 1) && (nondet == 0))
+			processP1();
+		nondet = random();
+		if(x == x_g && l == l_g && nondet == 0)
+			z = 1;					
+		nondet = random();
+		if(z == 1 && nondet == 0)
+			return;
+	
+	assume(false);
+	return;
+	
+	}
+	
+	private void processP1()
+	ensures (old(l) == 0 && old(x) == 1) ==> ((l == 1 && x == 1) || (l == 0 && x == 1) || (l == 1 && x == 0));
+	ensures (old(l) == 1 && old(x) == 1) ==> ((l == 0 && x == 1) || (l == 1 && x == 1) || (l == 1 && x == 0));
+	ensures (old(l) == 1 && old(x) == 0) ==> ((l == 1 && x == 1) || (l == 1 && x == 0) || (l == 0 && x == 1));
+	ensures (old(l) == 2) ==> (l == old(l) && x == old(x));
+	{
+		uint x_g, l_g, z, nondet;
+
+	x_g = x;
+	l_g = l;
+	
+	x = 1;
+	l = 0;
+	z = 0;
+	
+		nondet = random();
+		if((z != 1) && (nondet == 0))
+			processP2();
+		nondet = random();
+		if(x == x_g && l == l_g && nondet == 0)
+			z = 1;
+		nondet = random();
+		if(z == 1 && nondet == 0)
+			return;
+	
+	
+	assume(l == 0);
+	l = 1;
+	
+		nondet = random();
+		if((z != 1) && (nondet == 0))
+			processP2();
+		nondet = random();
+		if(x == x_g && l == l_g && nondet == 0)
+			z = 1;
+		nondet = random();
+		if(z == 1 && nondet == 0)
+			return;
+	
+	x = 0;
+	
+		nondet = random();
+		if((z != 1) && (nondet == 0))
+			processP2();
+		nondet = random();
+		if(x == x_g && l == l_g && nondet == 0)
+			z = 1;
+		nondet = random();
+		if(z == 1 && nondet == 0)
+			return;
+	
+	x = x + 1;
+	
+		nondet = random();
+		if((z != 1) && (nondet == 0))
+			processP2();
+		nondet = random();
+		if(x == x_g && l == l_g && nondet == 0)
+			z = 1;
+		nondet = random();
+		if(z == 1 && nondet == 0)
+			return;
+	
+	assert(x == 1);
+	l = 0;
+	
+		nondet = random();
+		if((z != 1) && (nondet == 0))
+			processP2();
+		nondet = random();
+		if(x == x_g && l == l_g && nondet == 0)
+			z = 1;
+		nondet = random();
+		if(z == 1 && nondet == 0)
+			return;
+	
+	assume(false);
+	return;
+	}
+	
+	public void main(string![]! args)
+	{
+		processP1();
+	}
+}

@@ -1,0 +1,275 @@
+using System;
+using Microsoft.Contracts;
+
+class Bluetooth
+{
+  
+  private int sFlag, pIO, sEvent, stopped, pcStopper, adders;
+  
+  Bluetooth()
+  ensures pIO == 1 && sFlag == 0 && sEvent == 0 && stopped == 0 && pcStopper == 0 && adders == 0;
+  {
+	pIO = 1;
+	sFlag = 0;
+	sEvent = 0;
+	stopped = 0;
+	pcStopper = 0;
+	adders = 0;
+  }
+  
+  [Pure] private int random()
+  ensures (result == 0 || result == 1);
+  {
+	return 0;
+  }
+  
+  private int Stopper(int _pcAdder)
+  requires (pcStopper == 1 ==> pIO == adders) && (pcStopper != 1 ==> pIO == adders + 1);
+  requires (sEvent == 1 ==> adders == 0 && pcStopper == 1) && (pcStopper == 1 ==> sFlag == 1);
+  requires (stopped == 1 ==> sEvent == 1) && 0 <= adders;
+  requires _pcAdder == 1 ==> adders > 0;
+  
+  ensures (pcStopper == 1 ==> pIO == adders) && (pcStopper != 1 ==> pIO == adders + 1);
+  ensures (sEvent == 1 ==> adders == 0 && pcStopper == 1) && (pcStopper == 1 ==> sFlag == 1);
+  ensures (stopped == 1 ==> sEvent == 1) && (old(sEvent) == 1 ==> sEvent == 1);
+  ensures _pcAdder == result;
+  ensures adders == old(adders);
+  {
+  
+	int sFlag_g, pIO_g, sEvent_g, stopped_g, pcStopper_g, adders_g, z, pcAdder;
+	sFlag_g = sFlag; pIO_g = pIO; sEvent_g = sEvent; stopped_g = stopped; pcStopper_g = pcStopper; adders_g = adders;
+	pIO = 1; sFlag = 0; sEvent = 0; stopped = 0; pcStopper = 0; adders = 0; pcAdder = 0; z = 0;
+	
+		if((z != 1) && (random() == 0))
+			pcAdder = Adder(pcAdder);
+		if(sFlag_g == sFlag && pIO_g == pIO && sEvent_g == sEvent && stopped_g == stopped && pcStopper_g == pcStopper && adders_g == adders && pcAdder == _pcAdder && random() == 0)
+			z = 1;
+		if(z == 1 && random() == 0)
+			return pcAdder;
+	
+	sFlag = 1;
+
+		if((z != 1) && (random() == 0))
+			pcAdder = Adder(pcAdder);
+		if(sFlag_g == sFlag && pIO_g == pIO && sEvent_g == sEvent && stopped_g == stopped && pcStopper_g == pcStopper && adders_g == adders && pcAdder == _pcAdder && random() == 0)
+			z = 1;
+		if(z == 1 && random() == 0)
+			return pcAdder;
+	
+	if(pIO == 1)
+		sEvent = 1;
+	pIO--;
+	pcStopper = 1;
+
+		if((z != 1) && (random() == 0))
+			pcAdder = Adder(pcAdder);
+		if(sFlag_g == sFlag && pIO_g == pIO && sEvent_g == sEvent && stopped_g == stopped && pcStopper_g == pcStopper && adders_g == adders && pcAdder == _pcAdder && random() == 0)
+			z = 1;
+		if(z == 1 && random() == 0)
+			return pcAdder;
+			
+	while(sEvent == 0);
+
+		if((z != 1) && (random() == 0))
+			pcAdder = Adder(pcAdder);
+		if(sFlag_g == sFlag && pIO_g == pIO && sEvent_g == sEvent && stopped_g == stopped && pcStopper_g == pcStopper && adders_g == adders && pcAdder == _pcAdder && random() == 0)
+			z = 1;
+		if(z == 1 && random() == 0)
+			return pcAdder;
+			
+	stopped = 1;
+
+		if((z != 1) && (random() == 0))
+			pcAdder = Adder(pcAdder);
+		if(sFlag_g == sFlag && pIO_g == pIO && sEvent_g == sEvent && stopped_g == stopped && pcStopper_g == pcStopper && adders_g == adders && pcAdder == _pcAdder && random() == 0)
+			z = 1;
+		if(z == 1 && random() == 0)
+			return pcAdder;
+		
+	assume(false);
+	return 0;
+  }
+  
+  private int Adder(int _pcAdder)
+  requires (pcStopper == 1 ==> pIO == adders) && (pcStopper != 1 ==> pIO == adders + 1);
+  requires (sEvent == 1 ==> adders == 0 && pcStopper == 1) && (pcStopper == 1 ==> sFlag == 1);
+  requires (stopped == 1 ==> sEvent == 1) && 0 <= adders;
+  requires _pcAdder == 1 ==> adders > 0;
+  
+  ensures (pcStopper == 1 ==> pIO == adders) && (pcStopper != 1 ==> pIO == adders + 1);
+  ensures (sEvent == 1 ==> adders == 0 && pcStopper == 1) && (pcStopper == 1 ==> sFlag == 1);
+  ensures (stopped == 1 ==> sEvent == 1) && (old(sEvent) == 1 ==> sEvent == 1);
+  ensures adders >= 0;
+  ensures sFlag == old(sFlag) && stopped == old(stopped) && pcStopper == old(pcStopper);
+  ensures (_pcAdder == 1 ==> adders > 0) && (result == 1 ==> adders > 0);
+  ensures ((result == 1 && _pcAdder == 1) ==> adders > 1);
+  {
+
+	int sFlag_g, pIO_g, sEvent_g, stopped_g, pcStopper_g, adders_g, z, myPC, pcCallee;
+	sFlag_g = sFlag; pIO_g = pIO; sEvent_g = sEvent; stopped_g = stopped; pcStopper_g = pcStopper; adders_g = adders;
+	myPC = 0; 
+	
+	if(random() == 0)
+	{
+		pIO = 1; sFlag = 0; sEvent = 0; stopped = 0; pcStopper = 0; adders = 0; pcCallee = 0; z = 0;
+	}
+	else 
+	{
+		pcCallee = _pcAdder;
+		z = 1;
+	}
+	
+	
+		while(random() == 0)
+		invariant (pcStopper == 1 ==> pIO == adders) && (pcStopper != 1 ==> pIO == adders + 1);
+		invariant (sEvent == 1 ==> adders == 0 && pcStopper == 1) && (pcStopper == 1 ==> sFlag == 1);
+		invariant (stopped == 1 ==> sEvent == 1) && /*0 <= adders_g &&*/ 0 <= adders && myPC == 0;
+		invariant z == 1 ==> (sFlag == sFlag_g && stopped == stopped_g && pcStopper == pcStopper_g);
+		invariant z == 1 ==> (sEvent_g == 1 ==> sEvent == 1);
+		invariant (pcCallee == 1 ==> adders > 0) && (z == 1 ==> pcCallee == _pcAdder) && (myPC == 1 ==> adders > 0);
+		invariant ((pcCallee == 1 && myPC == 1) ==> adders > 1);
+		{
+			if((z != 1) && (random() == 0))
+				myPC = Stopper(myPC);
+			if(sFlag_g == sFlag && pIO_g == pIO && sEvent_g == sEvent && stopped_g == stopped && pcStopper_g == pcStopper && adders_g == adders && pcCallee == _pcAdder && random() == 0)
+				z = 1;
+			if(random() == 0)
+				pcCallee = Adder(myPC);	
+			if(sFlag_g == sFlag && pIO_g == pIO && sEvent_g == sEvent && stopped_g == stopped && pcStopper_g == pcStopper && adders_g == adders && pcCallee == _pcAdder && random() == 0)
+				z = 1;
+			if(pcCallee != _pcAdder)
+				z = 0;
+			
+		}
+		if(z == 1 && random() == 0)
+			return myPC;
+			
+			
+  	if(sFlag != 1)
+	{	pIO++;
+		adders++;
+		myPC = 1;
+
+			while(random() == 0)
+			invariant (pcStopper == 1 ==> pIO == adders) && (pcStopper != 1 ==> pIO == adders + 1);
+			invariant (sEvent == 1 ==> adders == 0 && pcStopper == 1) && (pcStopper == 1 ==> sFlag == 1);
+			invariant (stopped == 1 ==> sEvent == 1) && /*0 <= adders_g &&*/ 0 < adders && myPC == 1;
+			invariant z == 1 ==> (sFlag == sFlag_g && stopped == stopped_g && pcStopper == pcStopper_g);
+			invariant z == 1 ==> (sEvent_g == 1 ==> sEvent == 1);
+			invariant (pcCallee == 1 ==> adders > 0) && (z == 1 ==> pcCallee == _pcAdder) && (myPC == 1 ==> adders > 0);
+			invariant ((pcCallee == 1 && myPC == 1) ==> adders > 1);
+			{
+				if((z != 1) && (random() == 0))
+					myPC = Stopper(myPC);
+				if(sFlag_g == sFlag && pIO_g == pIO && sEvent_g == sEvent && stopped_g == stopped && pcStopper_g == pcStopper && adders_g == adders && pcCallee == _pcAdder && random() == 0)
+					z = 1;
+				if(random() == 0)
+					pcCallee = Adder(myPC);	
+				if(sFlag_g == sFlag && pIO_g == pIO && sEvent_g == sEvent && stopped_g == stopped && pcStopper_g == pcStopper && adders_g == adders && pcCallee == _pcAdder && random() == 0)
+					z = 1;
+				if(pcCallee != _pcAdder)
+					z = 0;
+			
+			}
+			if(z == 1 && random() == 0)
+				return myPC;
+			
+		assert(stopped != 1);
+
+			while(random() == 0)
+			invariant (pcStopper == 1 ==> pIO == adders) && (pcStopper != 1 ==> pIO == adders + 1);
+			invariant (sEvent == 1 ==> adders == 0 && pcStopper == 1) && (pcStopper == 1 ==> sFlag == 1);
+			invariant (stopped == 1 ==> sEvent == 1) && /*0 <= adders_g &&*/ 0 < adders && myPC == 1;
+			invariant z == 1 ==> (sFlag == sFlag_g && stopped == stopped_g && pcStopper == pcStopper_g);
+			invariant z == 1 ==> (sEvent_g == 1 ==> sEvent == 1);
+			invariant (pcCallee == 1 ==> adders > 0) && (z == 1 ==> pcCallee == _pcAdder) && (myPC == 1 ==> adders > 0);
+			invariant ((pcCallee == 1 && myPC == 1) ==> adders > 1);
+			{
+				if((z != 1) && (random() == 0))
+					myPC = Stopper(myPC);
+				if(sFlag_g == sFlag && pIO_g == pIO && sEvent_g == sEvent && stopped_g == stopped && pcStopper_g == pcStopper && adders_g == adders && pcCallee == _pcAdder && random() == 0)
+					z = 1;
+				if(random() == 0)
+					pcCallee = Adder(myPC);	
+				if(sFlag_g == sFlag && pIO_g == pIO && sEvent_g == sEvent && stopped_g == stopped && pcStopper_g == pcStopper && adders_g == adders && pcCallee == _pcAdder && random() == 0)
+					z = 1;
+				if(pcCallee != _pcAdder)
+					z = 0;
+			
+			}
+			if(z == 1 && random() == 0)
+				return myPC;
+				
+		if(pIO == 1)
+			sEvent = 1;
+		pIO--;
+		adders--;
+		myPC = 2;
+		
+			while(random() == 0)
+			invariant (pcStopper == 1 ==> pIO == adders) && (pcStopper != 1 ==> pIO == adders + 1);
+			invariant (sEvent == 1 ==> adders == 0 && pcStopper == 1) && (pcStopper == 1 ==> sFlag == 1);
+			invariant (stopped == 1 ==> sEvent == 1) && /*0 <= adders_g &&*/ 0 <= adders && myPC == 2;
+			invariant z == 1 ==> (sFlag == sFlag_g && stopped == stopped_g && pcStopper == pcStopper_g);
+			invariant z == 1 ==> (sEvent_g == 1 ==> sEvent == 1);
+			invariant (pcCallee == 1 ==> adders > 0) && (z == 1 ==> pcCallee == _pcAdder) && (myPC == 1 ==> adders > 0);
+			invariant ((pcCallee == 1 && myPC == 1) ==> adders > 1);
+			{
+				if((z != 1) && (random() == 0))
+					myPC = Stopper(myPC);
+				if(sFlag_g == sFlag && pIO_g == pIO && sEvent_g == sEvent && stopped_g == stopped && pcStopper_g == pcStopper && adders_g == adders && pcCallee == _pcAdder && random() == 0)
+					z = 1;
+				if(random() == 0)
+					pcCallee = Adder(myPC);	
+				if(sFlag_g == sFlag && pIO_g == pIO && sEvent_g == sEvent && stopped_g == stopped && pcStopper_g == pcStopper && adders_g == adders && pcCallee == _pcAdder && random() == 0)
+					z = 1;
+				if(pcCallee != _pcAdder)
+					z = 0;
+			
+			}
+			if(z == 1 && random() == 0)
+				return myPC;
+				
+	}
+	else
+	{
+		while(random() == 0)
+		invariant (pcStopper == 1 ==> pIO == adders) && (pcStopper != 1 ==> pIO == adders + 1);
+		invariant (sEvent == 1 ==> adders == 0 && pcStopper == 1) && (pcStopper == 1 ==> sFlag == 1);
+		invariant (stopped == 1 ==> sEvent == 1) && /*0 <= adders_g &&*/ 0 <= adders && myPC == 0;
+		invariant z == 1 ==> (sFlag == sFlag_g && stopped == stopped_g && pcStopper == pcStopper_g);
+		invariant z == 1 ==> (sEvent_g == 1 ==> sEvent == 1);
+		invariant (pcCallee == 1 ==> adders > 0) && (z == 1 ==> pcCallee == _pcAdder) && (myPC == 1 ==> adders > 0);
+		invariant ((pcCallee == 1 && myPC == 1) ==> adders > 1);
+		{
+			if((z != 1) && (random() == 0))
+				myPC = Stopper(myPC);
+			if(sFlag_g == sFlag && pIO_g == pIO && sEvent_g == sEvent && stopped_g == stopped && pcStopper_g == pcStopper && adders_g == adders && pcCallee == _pcAdder && random() == 0)
+				z = 1;
+			if(random() == 0)
+				pcCallee = Adder(myPC);	
+			if(sFlag_g == sFlag && pIO_g == pIO && sEvent_g == sEvent && stopped_g == stopped && pcStopper_g == pcStopper && adders_g == adders && pcCallee == _pcAdder && random() == 0)
+				z = 1;
+			if(pcCallee != _pcAdder)
+				z = 0;
+			
+		}
+		if(z == 1 && random() == 0)
+			return myPC;
+	}
+	assume(false);
+	return 0;
+	
+  }  
+  
+  public void main(string![]! args)
+  {
+		pIO = 1;
+		sFlag = 0;
+		sEvent = 0;
+		stopped = 0;
+		pcStopper = 0;
+		adders = 0;
+		Stopper(0);
+  }
+}
